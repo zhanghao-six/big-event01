@@ -30,6 +30,8 @@ $(function() {
         }
     });
 
+    // 弹出层  导入layui里面的弹出层
+    var layer = layui.layer;
     // 3.注册功能
     $('#form_reg').on('submit', function(e) {
         // 3.1 阻止默认提交
@@ -37,7 +39,7 @@ $(function() {
         // 3.2 发送ajax
         $.ajax({
             method: 'POST',
-            url: 'http://ajax.frontend.itheima.net/api/reguser',
+            url: '/api/reguser',
             data: {
                 username: $('.reg-box [name=username]').val(),
                 password: $('.reg-box [name=password]').val(),
@@ -45,11 +47,40 @@ $(function() {
             success: function(res) {
                 // 3.3 判断状态
                 if (res.status != 0) {
-                    console.log(res.message);
+                    // console.log(res.message);
+                    layer.msg(res.message);
                 }
-                console.log(res.message);
+                // console.log(res.message);
+                layer.msg('注册成功, 请登录! ');
+                // 自动切换到登录页面
+                $('#link_login').click();
+                // 重置注册表单
+                $('#form_reg')[0].reset();
             }
 
+        })
+    });
+
+    // 4.登录功能
+    $('#form_login').submit(function(e) {
+        // 4.1 阻止默认跳转
+        e.preventDefault();
+        // 4.2 发送ajax
+        $.ajax({
+            method: 'POST',
+            url: '/api/login',
+            data: $(this).serialize(), // serialize() 快速获取表单内容
+            success: function(res) {
+                // 判断是否登录成功
+                if (res.status != 0) {
+                    return layer.msg(res.message);
+                }
+                layer.msg('恭喜你,登录成功！');
+                // 保存token值  可以访问有密钥的页面
+                localStorage.setItem('token', res.token);
+                // 跳转到主页
+                location.href = '/index.html';
+            }
         })
     })
 })
