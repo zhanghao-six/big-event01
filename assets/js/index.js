@@ -2,6 +2,19 @@
 $(function() {
     // 1. 用于获取用户信息
     getUserInfo();
+    // 4. 退出功能
+    $('#btnLogout').on('click', function() {
+        // alert(11)
+        // layui 询问框
+        layer.confirm('确认退出登录吗?', { icon: 3, title: '提示' }, function(index) {
+            // 4.1 删除token值
+            localStorage.removeItem('token');
+            // 4.2 跳转到登录页面上
+            location.href = '/login.html';
+            // 关闭询问框
+            layer.close(index);
+        });
+    })
 });
 
 // 2.获取用户信息(封装必须在入口函数外面 全局)
@@ -21,9 +34,19 @@ function getUserInfo() {
             }
             // 请求成功,渲染用户头像信息
             renderAvatar(res.data);
-
-        }
-
+        },
+        // 不论成功还是失败  最终都会调用 complete 回调函数
+        // complete: function(res) {
+        //     // console.log('执行了 complete 回调');
+        //     // console.log(res);
+        //     // 在complete回调函数中 可以使用res.resposeJSON 拿到服务器响应回来的数据
+        //     if (res.responseJSON.status === 1 && res.resposeJSON.message === '身份认证失败!') {
+        //         // 强制清空token
+        //         localStorage.removeItem('token')
+        //             // 强制跳转到登录页面
+        //         location.href = '/login.html'
+        //     }
+        // }
     })
 }
 
