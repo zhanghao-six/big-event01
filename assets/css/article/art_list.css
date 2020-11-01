@@ -4,10 +4,6 @@ body {
     background: #f2f3f5;
 }
 
-.layui-form {
-    width: 500px;
-}
-
 .layui-card-header {
     display: flex;
     justify-content: space-between;
